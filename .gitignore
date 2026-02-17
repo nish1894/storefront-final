@@ -1,11 +1,13 @@
 # ── Build output ──
-storefront20/target/
-!storefront20/.mvn/wrapper/maven-wrapper.jar
+storefront-service/target/
+order-service/target/
+!storefront-service/.mvn/wrapper/maven-wrapper.jar
+!order-service/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
 # ── Node / npm ──
-storefront20/node_modules/
+storefront-service/node_modules/
 
 # ── IDE & editor ──
 .idea/
@@ -36,10 +38,11 @@ build/
 Thumbs.db
 
 # ── Spring Boot secrets ──
-storefront20/src/main/resources/application.properties
+storefront-service/src/main/resources/application.properties
+order-service/src/main/resources/application.properties
 
 # ── Generated CSS ──
-storefront20/src/main/resources/static/css/output.css
+storefront-service/src/main/resources/static/css/output.css
 
 # ── Logs ──
 *.log

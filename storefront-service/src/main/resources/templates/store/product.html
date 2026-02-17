@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  data-th-replace="~{base :: parent(~{::#content}, ~{::title}, ~{::script})}"
+>
+  <head>
+    <title>Product Details</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="mx-auto w-[95%] md:w-[85%] lg:w-[75%] px-4 2xl:px-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 py-12">
+          <!-- Product Images Section -->
+          <div class="space-y-6">
+            <div
+              class="aspect-square w-full overflow-hidden rounded-xl bg-gray-100"
+            >
+              <img
+                th:src="${product.image}"
+                class="h-full w-full object-contain p-4"
+                alt="Product Image"
+              />
+            </div>
+            <!-- Thumbnails -->
+            <div class="grid grid-cols-4 gap-4">
+              <button
+                th:each="image : ${product.image}"
+                class="aspect-square w-full overflow-hidden rounded-lg bg-gray-100"
+              >
+                <img
+                  th:src="${image}"
+                  class="h-full w-full object-contain"
+                  alt="Product thumbnail"
+                />
+              </button>
+            </div>
+          </div>
+
+          <!-- Product Details Section -->
+          <div class="space-y-8">
+            <div class="space-y-6">
+              <h1
+                class="text-3xl font-bold text-gray-900 dark:text-white"
+                th:text="${product.title}"
+              >
+                Product Title
+              </h1>
+
+              <!-- Rating Section -->
+              <div class="flex items-center gap-2">
+                <div class="flex items-center">
+                  <svg
+                    th:each="i : ${#numbers.sequence(1, 5)}"
+                    class="h-4 w-4 text-yellow-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z"
+                    />
+                  </svg>
+                </div>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                  5.0
+                </p>
+                <p
+                  class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                  th:text="'(' + ${product.ratingCount} + ' reviews)'"
+                ></p>
+              </div>
+
+              <!-- Price -->
+              <p
+                class="text-3xl font-bold text-gray-900 dark:text-white"
+                th:text="'$' + ${product.price}"
+              ></p>
+
+              <!-- Description -->
+              <div class="prose prose-sm text-gray-500 dark:text-gray-400">
+                <p th:text="${product.description}"></p>
+              </div>
+
+              <!-- Quantity Selector -->
+              <div class="flex items-center gap-3">
+                <label class="text-sm font-medium text-gray-900 dark:text-white"
+                  >Quantity:</label
+                >
+                <select
+                  class="sidebar-input rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                >
+                  <option
+                    th:each="i : ${#numbers.sequence(1, 5)}"
+                    th:value="${i}"
+                    th:text="${i}"
+                  >
+                    1
+                  </option>
+                </select>
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button
+                th:onclick="updateCart([[${product.itemId}]], 'add')"
+                class="btn-cta inline-flex w-full items-center justify-center rounded-xl bg-blue-700 px-5 py-3 text-sm font-medium text-white shadow-md hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <svg
+                  class="-ms-2 me-2 h-5 w-5"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6"
+                  />
+                </svg>
+                Add to Cart
+              </button>
+
+              <!-- Product Information -->
+              <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+                <h3
+                  class="mb-4 text-lg font-medium text-gray-900 dark:text-white"
+                >
+                  Product Information
+                </h3>
+                <ul
+                  class="list-inside space-y-2 text-sm text-gray-500 dark:text-gray-400"
+                >
+                  <li>
+                    Category:
+                    <span
+                      class="font-medium text-gray-900 dark:text-white"
+                      th:text="${product.category}"
+                    ></span>
+                  </li>
+
+                  <li>
+                    SKU:
+                    <span
+                      class="font-medium text-gray-900 dark:text-white"
+                      th:text="${product.itemId}"
+                    ></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <section class="bg-white py-8 antialiased dark:bg-gray-900 md:py-16">
+        <div class="mx-auto max-w-screen-xl px-4 2xl:px-0">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">
+                Reviews
+              </h2>
+              <div class="mt-2 flex items-center gap-2 sm:mt-0">
+                <div class="flex items-center gap-0.5">
+                  <!-- Star fragment -->
+                  <!-- Star fragment -->
+                  <!-- Star fragment -->
+                  <!-- Star fragment -->
+                  <!-- Star fragment -->
+                </div>
+                <p
+                  class="text-sm font-medium leading-none text-gray-500 dark:text-gray-400"
+                >
+                  (4.6)
+                </p>
+                <a
+                  href="#"
+                  class="text-sm font-medium leading-none text-gray-900 underline hover:no-underline dark:text-white"
+                  >645 Reviews</a
+                >
+              </div>
+            </div>
+
+            <!-- Write Review Button -->
+            <button
+              onclick="toggleReviewForm()"
+              type="button"
+              class="btn-cta inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-700 rounded-xl shadow-md hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                />
+              </svg>
+              Write a Review
+            </button>
+          </div>
+
+          <div class="my-6 gap-8 sm:flex sm:items-start md:my-8">
+            <div class="shrink-0 space-y-4">
+              <p
+                class="text-2xl font-semibold leading-none text-gray-900 dark:text-white"
+                data-th-text="${averageRating}"
+              >
+                4.65 out of 5
+              </p>
+              <button
+                type="button"
+                data-modal-target="review-modal"
+                data-modal-toggle="review-modal"
+                class="mb-2 me-2 rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                Write a review 
+              </button>
+            </div>
+
+            <div class="mt-6 min-w-0 flex-1 space-y-3 sm:mt-0">
+              <!-- Rating rows -->
+              <div class="flex items-center gap-2">
+                <p
+                  class="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white"
+                >
+                  5
+                </p>
+                <!-- Star fragment -->
+                <div
+                  class="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700"
+                >
+                  <div
+                    class="h-1.5 rounded-full bg-yellow-300"
+                    style="width: 20%"
+                  ></div>
+                </div>
+                <a
+                  href="#"
+                  class="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
+                  >239 <span class="hidden sm:inline">reviews</span></a
+                >
+              </div>
+
+              <div class="flex items-center gap-2">
+                <p
+                  class="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white"
+                >
+                  4
+                </p>
+                <!-- Star fragment -->
+                <div
+                  class="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700"
+                >
+                  <div
+                    class="h-1.5 rounded-full bg-yellow-300"
+                    style="width: 60%"
+                  ></div>
+                </div>
+                <a
+                  href="#"
+                  class="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
+                  >432 <span class="hidden sm:inline">reviews</span></a
+                >
+              </div>
+
+              <div class="flex items-center gap-2">
+                <p
+                  class="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white"
+                >
+                  3
+                </p>
+                <!-- Star fragment -->
+                <div
+                  class="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700"
+                >
+                  <div
+                    class="h-1.5 rounded-full bg-yellow-300"
+                    style="width: 15%"
+                  ></div>
+                </div>
+                <a
+                  href="#"
+                  class="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
+                  >53 <span class="hidden sm:inline">reviews</span></a
+                >
+              </div>
+
+              <div class="flex items-center gap-2">
+                <p
+                  class="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white"
+                >
+                  2
+                </p>
+                <!-- Star fragment -->
+                <div
+                  class="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700"
+                >
+                  <div
+                    class="h-1.5 rounded-full bg-yellow-300"
+                    style="width: 5%"
+                  ></div>
+                </div>
+                <a
+                  href="#"
+                  class="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
+                  >32 <span class="hidden sm:inline">reviews</span></a
+                >
+              </div>
+
+              <div class="flex items-center gap-2">
+                <p
+                  class="w-2 shrink-0 text-start text-sm font-medium leading-none text-gray-900 dark:text-white"
+                >
+                  1
+                </p>
+                <!-- Star fragment -->
+                <div
+                  class="h-1.5 w-80 rounded-full bg-gray-200 dark:bg-gray-700"
+                >
+                  <div
+                    class="h-1.5 rounded-full bg-yellow-300"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <a
+                  href="#"
+                  class="w-8 shrink-0 text-right text-sm font-medium leading-none text-primary-700 hover:underline dark:text-primary-500 sm:w-auto sm:text-left"
+                  >13 <span class="hidden sm:inline">reviews</span></a
+                >
+              </div>
+            </div>
+          </div>
+
+      
+
+          <!-- Review Form (Hidden by default) -->
+          <div
+            class=" review-form hidden mt-8 mb-8 p-6 bg-white rounded-lg shadow dark:bg-gray-800"
+          >
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              Write a Review
+            </h3>
+            <form
+              th:action="@{/store/product/{id}/review(id=${product.itemId})}"
+              method="POST"
+              class="space-y-4"
+            >
+              <input type="hidden" />
+
+              <!-- Keep your existing form fields but add proper name attributes -->
+              <div>
+                <label
+                  for="reviewerName"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Your Name</label
+                >
+                <input
+                  type="text"
+                  id="reviewerName"
+                  name="reviewerName"
+                  class="sidebar-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  for="rating"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Rating</label
+                >
+                <select
+                  id="rating"
+                  name="rating"
+                  class="sidebar-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                >
+                  <option value="">Select a rating</option>
+                  <option value="5">5 Stars - Excellent</option>
+                  <option value="4">4 Stars - Good</option>
+                  <option value="3">3 Stars - Average</option>
+                  <option value="2">2 Stars - Poor</option>
+                  <option value="1">1 Star - Very Poor</option>
+                </select>
+              </div>
+
+              <div>
+                <label
+                  for="comment"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >Your Review</label
+                >
+                <textarea
+                  id="comment"
+                  name="comment"
+                  rows="4"
+                  class="sidebar-input block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Write your thoughts about the product..."
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="btn-cta text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl shadow-md text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Submit Review
+              </button>
+            </form>
+          </div>
+
+          <!--  review -->
+          <div
+            data-th-object="${r}"
+            data-th-each="r : ${reviews}"
+            class="mt-8 border-b border-gray-200 last:border-b-0 dark:border-gray-700"
+          >
+            <div class="gap-6 pb-8 sm:flex sm:items-start">
+              <!-- Review Header -->
+              <div class="shrink-0 space-y-3 sm:w-48">
+                <!-- Rating Stars -->
+                <div class="flex items-center gap-1">
+                  <svg
+                    th:each="i : ${#numbers.sequence(1, r.rating)}"
+                    class="h-4 w-4 text-yellow-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M13.8 4.2a2 2 0 0 0-3.6 0L8.4 8.4l-4.6.3a2 2 0 0 0-1.1 3.5l3.5 3-1 4.4c-.5 1.7 1.4 3 2.9 2.1l3.9-2.3 3.9 2.3c1.5 1 3.4-.4 3-2.1l-1-4.4 3.4-3a2 2 0 0 0-1.1-3.5l-4.6-.3-1.8-4.2Z"
+                    />
+                  </svg>
+                </div>
+                <!-- Reviewer Name -->
+                <p
+                  class="text-sm font-semibold text-gray-900 dark:text-white"
+                  data-th-text="*{reviewer}"
+                ></p>
+                <!-- Review Date -->
+                <p
+                  class="text-sm text-gray-500 dark:text-gray-400"
+                  th:text="${#temporals.format(r.updatedAt, 'MMM dd, yyyy')}"
+                ></p>
+              </div>
+
+              <!-- Review Content -->
+              <div class="mt-4 min-w-0 flex-1 space-y-4 sm:mt-0">
+                <p
+                  class="text-base text-gray-600 dark:text-gray-300"
+                  data-th-text="*{comment}"
+                ></p>
+
+                <!-- Helpfulness Section -->
+                <div class="flex items-center gap-4 pt-2">
+                  <span class="text-sm text-gray-500 dark:text-gray-400">
+                    Was this helpful?
+                  </span>
+                  <div class="flex items-center gap-6">
+                    <div class="flex items-center">
+                      <input
+                        type="radio"
+                        id="helpful-yes"
+                        name="helpful"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600"
+                      />
+                      <label
+                        for="helpful-yes"
+                        class="ml-2 text-sm text-gray-600 dark:text-gray-300"
+                        >Yes (3)</label
+                      >
+                    </div>
+                    <div class="flex items-center">
+                      <input
+                        type="radio"
+                        id="helpful-no"
+                        name="helpful"
+                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600"
+                      />
+                      <label
+                        for="helpful-no"
+                        class="ml-2 text-sm text-gray-600 dark:text-gray-300"
+                        >No (0)</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      console.log("Product details page loaded");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="light" lang="en" 
+    th:fragment="parent(content, title, script)"
+    xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:replace="${title}">SCM</title>
+    <!-- <title th:text="${title} ?: 'Base Page'">SCM</title> -->
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+
+    <!-- Add Flowbite CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.css">
+
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Product card hover */
+        .product-card {
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08), 0 4px 10px -5px rgba(0,0,0,0.04);
+        }
+
+        /* Image zoom on card hover */
+        .product-card .product-img {
+            transition: transform 0.3s ease-out;
+        }
+        .product-card:hover .product-img {
+            transform: scale(1.05);
+        }
+
+        /* CTA button hover lift */
+        .btn-cta {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+        .btn-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(29,78,216,0.3);
+        }
+
+        /* Cart item card hover */
+        .cart-item-card {
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .cart-item-card:hover {
+            box-shadow: 0 4px 15px -3px rgba(0,0,0,0.07), 0 2px 6px -2px rgba(0,0,0,0.04);
+        }
+
+        /* Sidebar input focus */
+        .sidebar-input {
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .sidebar-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        /* Nav link hover underline */
+        .nav-link-hover {
+            position: relative;
+            transition: color 0.2s ease-in-out;
+        }
+        .nav-link-hover::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 0;
+            height: 2px;
+            background-color: #2563eb;
+            transition: width 0.25s ease-in-out;
+        }
+        .nav-link-hover:hover::after {
+            width: 100%;
+        }
+
+        /* Sidebar button hover */
+        .sidebar-btn {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+        }
+        .sidebar-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Sidebar nav item hover */
+        .sidebar-nav-item {
+            transition: background-color 0.15s ease-in-out, padding-left 0.15s ease-in-out;
+        }
+        .sidebar-nav-item:hover {
+            padding-left: 12px;
+        }
+
+        /* Theme toggle pill */
+        .theme-toggle {
+            position: relative;
+            width: 3.5rem;
+            height: 2rem;
+            border-radius: 9999px;
+            background-color: #e5e7eb;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-inline: 0.4rem;
+        }
+        .dark .theme-toggle { background-color: #374151; }
+        .theme-toggle-icon { font-size: 0.7rem; z-index: 1; transition: color 0.3s ease; }
+        .theme-toggle-icon.sun { color: #f59e0b; }
+        .theme-toggle-icon.moon { color: #94a3b8; }
+        .dark .theme-toggle-icon.sun { color: #6b7280; }
+        .dark .theme-toggle-icon.moon { color: #facc15; }
+        .theme-toggle-dot {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 1.625rem;
+            height: 1.625rem;
+            border-radius: 9999px;
+            background-color: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+        .dark .theme-toggle-dot { transform: translateX(1.5rem); }
+
+        /* Cart badge bounce */
+        @keyframes badge-bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        .badge-bounce { animation: badge-bounce 0.3s ease-in-out; }
+
+        /* Coupon cards */
+        .coupon-card { cursor: pointer; }
+        .coupon-card.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+        }
+        .dark .coupon-card.active {
+            border-color: #60a5fa;
+            background-color: rgba(59,130,246,0.1);
+            box-shadow: 0 0 0 2px rgba(96,165,250,0.2);
+        }
+    </style>
+</head>
+
+<!-- <body class="bg-gray-100 text-black"> -->
+
+
+<body class=" bg-gray-50 dark:bg-gray-900 dark:text-white">
+
+    <!-- <user is logged in > -->
+    <div th:if="${loggedInUser}">
+        <div data-th-replace="~{loggedNavbar :: navbar}"></div>
+
+    </div>
+
+    <!-- <user is NOT logged in > -->
+    <div th:unless="${loggedInUser}">
+        <div data-th-replace="~{navbar :: navbar}"></div>  
+
+    </div>
+
+
+    <div data-th-insert ="~{sidebar :: sidebar}"></div>
+
+    <!-- <Main content> -->
+    <div class="p-4 ms-70 mt-40 me-5">
+        <section data-th-replace="${content}"></section>
+    </div>
+    <!-- <common footer> -->
+
+    <!-- Script-->
+
+    <!-- Add Flowbite JS before closing </body> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.0.0/flowbite.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
+    <script data-th-src="@{'/js/script.js'}"></script>
+    <script data-th-src="@{'/js/cart.js'}"></script>
+    <script data-th-src="@{'/js/search.js'}"></script>
+    <th:block data-th-replace="${script}"></th:block>
+</body>
+
+</html>
